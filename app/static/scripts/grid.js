@@ -25,7 +25,7 @@ function drawGrid() {
     for (let j = 0; j < rows; j++) {
       // Draw the filled square
       if (gridState[j][i]) {
-        ctx.fillStyle = "#BCE7D344"; // Filled square color
+        ctx.fillStyle = "#BFE2FF44"; // Filled square color
         ctx.fillRect(
           i * (squareSize + borderSize),
           j * (squareSize + borderSize),
@@ -35,7 +35,7 @@ function drawGrid() {
       }
 
       // Draw the border for the square
-      ctx.strokeStyle = "#bbc7c033"; // Border color
+      ctx.strokeStyle = "#DFE2FA99"; // Border color
       ctx.lineWidth = borderSize;
       ctx.strokeRect(
         i * (squareSize + borderSize),
