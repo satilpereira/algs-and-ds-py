@@ -16,7 +16,7 @@ let gridState = Array.from({ length: rows }, () =>
   Array(columns).fill(false)
 );
 let filledSquaresCount = 0; // Count of currently filled squares
-const maxFilledSquares = Math.floor((rows * columns) / 3); // Maximum filled squares (half of the grid)
+const maxFilledSquares = Math.floor((rows * columns) / 4); // Maximum filled squares (quarter of the grid)
 
 // Function to draw the grid
 function drawGrid() {
