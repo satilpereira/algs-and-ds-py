@@ -17,7 +17,9 @@
   >
     {% include 'partials/navbar.html' %}
 
-    <main class="flex-grow">{% block content %}{% endblock %}</main>
+    <main class="flex-grow mx-4">
+      {% block content %}{% endblock %}
+    </main>
 
     <!-- fab -->
     {% include'partials/fab.html' %}
