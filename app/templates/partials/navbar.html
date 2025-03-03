@@ -1,0 +1,11 @@
+<header class="p-2">
+  <nav
+    class="container border py-4 px-6 bg-opacity-20 bg-white backdrop-blur-md shadow-sm rounded-full"
+  >
+    <ul>
+      {% for link in nav_links %}
+      <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+</header>

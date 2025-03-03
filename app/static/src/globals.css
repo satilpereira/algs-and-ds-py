@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card {
+    @apply bg-white shadow-sm rounded-[27px] overflow-hidden bg-opacity-20 backdrop-blur-md border;
+  }
+}

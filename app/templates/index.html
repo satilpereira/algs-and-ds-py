@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %} {% block title %}Home{% endblock %}
+{% from 'ui/card.html' import card_header, card_title, card_content,
+card_footer %} {% block content %}
+
+<div class="card container">
+  {% call card_header() %} {% call card_title() %} My Card Title {%
+  endcall %} {% endcall %} {% call card_content() %}
+  <p>
+    This is the content of the card. It can be anything you want it to
+    be.
+  </p>
+  {% endcall %} {% call card_footer() %} This is the footer of the
+  card. {% endcall %}
+</div>
+
+{% endblock %}

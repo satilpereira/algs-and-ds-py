@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "export FLASK_DEBUG=1 && flask run",
+    "styles": "npx tailwindcss -i ./app/static/src/globals.css -o ./app/static/dist/globals.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "lucide": "^0.477.0"
+  }
+}

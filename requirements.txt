@@ -1,1 +1,6 @@
-pygame
+# Main dependencies
+Flask
+Jinja2
+
+# Dev dependencies
+j2lint

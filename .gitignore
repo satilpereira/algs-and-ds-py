@@ -1,3 +1,5 @@
+.env
+.vscode
 /venv
-/dist
-/build
+/app/static/dist*
+node_modules
