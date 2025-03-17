@@ -71,10 +71,12 @@
   });
 </script>
 <script type="module">
-  import { State, effect } from "./static/modules/state.js";
   import { updateQueryParams } from "./static/scripts/query-params.js";
-  const speed = new State(50);
-  const playback = new State("stop");
+  import {
+    speed,
+    playback,
+    globalEffect,
+  } from "./static/modules/global-states.js";
 
   // On first load, get playback and speed from query params
   const params = new URLSearchParams(window.location.search);
@@ -134,14 +136,14 @@
     updateQueryParams("speed", value);
   }
 
-  effect(() => {
+  globalEffect(() => {
     console.log("Effect triggered: ", {
       speed: speed.value,
       playback: playback.value,
     });
   }, [speed, playback]);
 
-  effect(() => {
+  globalEffect(() => {
     updatePlaybackButton(playback.value);
   }, [playback]);
 
