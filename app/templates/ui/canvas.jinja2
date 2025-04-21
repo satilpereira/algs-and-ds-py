@@ -1,0 +1,139 @@
+{% macro canvas() %}
+  <section id="canvas-container" class="w-full h-0 flex-1 flex flex-col">
+    <canvas id="canvas" class="w-full border"></canvas>
+  </section>
+  <script>
+      const ARRAY = Array.from({
+          length: 55
+      }, (_, i) => i);
+  </script>
+
+  <script>
+      const canvasContainer = document.getElementById("canvas-container");
+      const c = document.getElementById("canvas");
+      const c_ctx = c.getContext("2d");
+      c.width = canvasContainer.clientWidth;
+      c.height = canvasContainer.clientWidth / 2;
+
+      for (let i = 0; i < ARRAY.length; i++) {
+          c_ctx.fillStyle = "blue";
+          const x = (i + 1) * (c.width / ARRAY.length);
+          c_ctx.fillRect(x, 10, 10, 10 * (i + 1))
+          const text = ARRAY[i];
+          c_ctx.fillStyle = "black";
+          c_ctx.font = "10px Arial";
+          c_ctx.fillText(text, x + 2, 10 * (i + 1) + 24);
+          c_ctx.stroke()
+      }
+
+      const highlightBar = (i) => {
+          c_ctx.fillStyle = "red";
+          const x = (i + 1) * (c.width / ARRAY.length);
+          c_ctx.fillRect(x, 10, 10, 10 * (i + 1))
+          c_ctx.stroke()
+      }
+
+      const unhighlightBar = (i) => {
+          c_ctx.fillStyle = "blue";
+          const x = (i + 1) * (c.width / ARRAY.length);
+          c_ctx.fillRect(x, 10, 10, 10 * (i + 1))
+          c_ctx.stroke()
+      }
+
+      const washbar = (i) => {
+          c_ctx.fillStyle = "gray";
+          const x = (i + 1) * (c.width / ARRAY.length);
+          c_ctx.fillRect(x, 10, 10, 10 * (i + 1))
+          c_ctx.stroke()
+      }
+
+      // highlightBar(5);
+      // unhighlightBar(5);
+  </script>
+  <script type="module">
+      import {
+          loadWasm,
+          getStepCount,
+          getStep
+      } from "{{ url_for('static', filename='../../static/wasm/index.js') }}";
+      // Use the WASM module directly for memory management
+      const test = async () => {
+          const wasm = await loadWasm();
+          const array = new Int32Array(ARRAY);
+          const size = array.length;
+          const target = 1;
+
+          // Allocate memory in WASM
+          const bytes = array.length * Int32Array.BYTES_PER_ELEMENT;
+          const ptr = wasm._malloc(bytes);
+
+          // Copy array to WASM memory
+          wasm.HEAP32.set(array, ptr >> 2);
+
+          // Call binary_search with pointer
+          wasm._wasm_binary_search(ptr, size, target);
+
+          const total = wasm._wasm_get_step_count();
+          console.log("Total steps:", total);
+
+          // Track washed bars
+          const washed = new Set();
+
+          for (let i = 0; i < total; i++) {
+              const stepPtr = wasm._wasm_get_step(i);
+              const baseIndex = stepPtr >> 2;
+              const step = {
+                  low: wasm.HEAP32[baseIndex],
+                  high: wasm.HEAP32[baseIndex + 1],
+                  mid: wasm.HEAP32[baseIndex + 2],
+              };
+              console.log(`Step ${i}:`, step);
+
+              highlightBar(step.mid);
+
+              if (i > 0) {
+                  const lastStep = {
+                      low: wasm.HEAP32[baseIndex - 3],
+                      high: wasm.HEAP32[baseIndex - 2],
+                      mid: wasm.HEAP32[baseIndex - 1],
+                  };
+
+                  // UNhighlight the previous bar
+                  unhighlightBar(lastStep.mid);
+              }
+
+              if (i < total - 1) {
+                  const nextStep = {
+                      low: wasm.HEAP32[baseIndex + 3],
+                      high: wasm.HEAP32[baseIndex + 4],
+                      mid: wasm.HEAP32[baseIndex + 5],
+                  };
+                  // Wash bars before nextStep.low, starting from higher index
+                  for (let j = nextStep.low - 1; j >= 0; j--) {
+                      if (j !== step.mid && !washed.has(j)) {
+                          washbar(j);
+                          washed.add(j);
+                          await new Promise(resolve => setTimeout(resolve, 50));
+                      }
+                  }
+                  // Wash bars after nextStep.high as before
+                  for (let j = 0; j < ARRAY.length; j++) {
+                      if (j > nextStep.high) {
+                          if (j !== step.mid && !washed.has(j)) {
+                              washbar(j);
+                              washed.add(j);
+                              await new Promise(resolve => setTimeout(resolve, 50));
+                          }
+                      }
+                  }
+              }
+
+              await new Promise(resolve => setTimeout(resolve, 50));
+          }
+
+          // Free WASM memory
+          wasm._free(ptr);
+      };
+      test();
+  </script>
+{% endmacro %}

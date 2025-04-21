@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='../../static/dist/globals.css') }}" />
   </head>
 
-  <body class="bg-slate-100 text-slate-700 flex flex-col h-screen max-h-screen">
+  <body class="bg-slate-100 text-slate-700 flex flex-col h-screen max-h-screen overflow-hidden">
     {% include "partials/navbar.jinja2" %}
 
-    <main class="flex-grow mx-4">
+    <main class="flex-1 mx-4 flex flex-col overflow-hidden">
       {% block content %}
       {% endblock content %}
     </main>

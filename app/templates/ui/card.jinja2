@@ -1,19 +1,19 @@
 <!-- Card Header-->
 {% macro card_header() %}
-<div class="p-6 border-b">{{ caller() }}</div>
+  <div class="p-6 border-b">{{ caller() }}</div>
 {% endmacro %}
 
 <!-- Card Title -->
 {% macro card_title() %}
-<div class="card-title">{{ caller() }}</div>
+  <div class="card-title">{{ caller() }}</div>
 {% endmacro %}
 
 <!-- Card Content -->
 {% macro card_content() %}
-<div class="p-6">{{ caller() }}</div>
+  <div class="p-6 flex-1 h-0 flex flex-col">{{ caller() }}</div>
 {% endmacro %}
 
 <!-- Card Footer -->
 {% macro card_footer() %}
-<div class="p-6 border-t mt-auto">{{ caller() }}</div>
+  <div class="p-6 border-t mt-auto">{{ caller() }}</div>
 {% endmacro %}

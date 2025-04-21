@@ -26,7 +26,7 @@ extern "C"
   }
 
   EMSCRIPTEN_KEEPALIVE
-  Step wasm_get_step(int index)
+  Step *wasm_get_step(int index)
   {
     return ::get_step(index);
   }

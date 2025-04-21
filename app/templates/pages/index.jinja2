@@ -3,18 +3,16 @@
   Home
 {% endblock title %}
 {% from "ui/card.jinja2" import card_header, card_title, card_content, card_footer %}
+{% from "ui/canvas.jinja2" import canvas %}
 {% block content %}
-  <div class="card container h-full flex flex-col">
+  <div class="card container flex-1 flex flex-col">
     {% call card_header() %}
       {% call card_title() %}
         Speed: <span data-state="speed">{{ speed }}</span> playback: <span data-state="playback">{{ playback }}</span>
       {% endcall %}
     {% endcall %}
     {% call card_content() %}
-      <p>
-        This is the content of the card. It can be anything you want it to
-        be.
-      </p>
+      {{ canvas() }}
     {% endcall %}
     {% call card_footer() %}
       This is the footer of the card.

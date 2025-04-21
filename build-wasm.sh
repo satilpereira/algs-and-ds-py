@@ -27,7 +27,7 @@ EMCC_FLAGS="-O3 \
   -sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']"
 
 # Define exported functions with wasm_ prefix to match our implementation
-EXPORTED_FUNCTIONS='["_wasm_hello", "_wasm_binary_search", "_wasm_get_step_count", "_wasm_get_step"]'
+EXPORTED_FUNCTIONS='["_wasm_hello", "_wasm_binary_search", "_wasm_get_step_count", "_wasm_get_step", "_malloc", "_free"]'
 
 EMCC_FILES=(
   "wasm/index.cpp"
