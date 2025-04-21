@@ -1,0 +1,35 @@
+{% extends "layouts/base.jinja2" %}
+{% block title %}
+  Home
+{% endblock title %}
+{% from "ui/card.html" import card_header, card_title, card_content, card_footer %}
+{% block content %}
+  <div class="card container h-full flex flex-col">
+    {% call card_header() %}
+      {% call card_title() %}
+        Speed: <span data-state="speed">{{ speed }}</span> playback: <span data-state="playback">{{ playback }}</span>
+      {% endcall %}
+    {% endcall %}
+    {% call card_content() %}
+      <p>
+        This is the content of the card. It can be anything you want it to
+        be.
+      </p>
+    {% endcall %}
+    {% call card_footer() %}
+      This is the footer of the card.
+    {% endcall %}
+  </div>
+  <script type="module">
+      import {
+          speed,
+          playback,
+      } from "./static/modules/global-states.js";
+      import {
+          bindStateToElements
+      } from "./static/modules/bind-state.js";
+
+      bindStateToElements("speed", speed);
+      bindStateToElements("playback", playback);
+  </script>
+{% endblock content %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="This is a Flask application showcasing algorithms and data structures." />
+    <meta name="keywords" content="Flask, Algorithms, Data Structures, Python" />
+    <title>
+      {% block title %}
+        My Flask App
+      {% endblock title %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='../../static/dist/globals.css') }}" />
+  </head>
+
+  <body class="bg-slate-100 text-slate-700 flex flex-col h-screen max-h-screen">
+    {% include "partials/navbar.jinja2" %}
+
+    <main class="flex-grow mx-4">
+      {% block content %}
+      {% endblock content %}
+    </main>
+
+    <!-- fab -->
+    {% include"partials/fab.jinja2" %}
+
+    <!-- Footer -->
+    {% include "partials/footer.jinja2" %}
+
+    <canvas class="absolute left-0 top-0 w-full h-full pointer-events-none -z-10" id="gridCanvas"></canvas>
+    <script src="{{url_for('static',filename='../../static/scripts/grid.js')}}"></script>
+    <script type="module">
+        import "{{ url_for('static', filename='../../static/modules/bind-state.js') }}";
+    </script>
+  </body>
+
+</html>

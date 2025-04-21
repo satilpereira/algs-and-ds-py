@@ -1,0 +1,190 @@
+<aside class="absolute bottom-0 right-0 m-4 space-y-4 z-10">
+  <div id="fab-content"
+       class="card max-w-sm py-6 h-0 w-0 transition-all opacity-0 pointer-events-none divide-y">
+    <fieldset class="flex flex-row gap-2 px-6 pb-4 shrink-0">
+      <button id="playback-play"
+              onclick="setPlayback('play')"
+              class="w-full border p-2 rounded-lg bg-slate-500 text-white flex items-center justify-center"
+              type="button">
+        <i data-lucide="play"></i>
+      </button>
+      <button id="playback-pause"
+              onclick="setPlayback('pause')"
+              class="w-full border p-2 rounded-lg bg-slate-500 text-white flex items-center justify-center"
+              type="button">
+        <i data-lucide="pause"></i>
+      </button>
+      <button id="playback-stop"
+              onclick="setPlayback('stop')"
+              class="w-full border p-2 rounded-lg bg-slate-500 text-white flex items-center justify-center"
+              type="button">
+        <i data-lucide="square"></i>
+      </button>
+    </fieldset>
+    <fieldset class="space-y-2 px-6 py-2">
+      <label for="speed-range" class="font-bold">Speed</label>
+      <input id="speed-range"
+             type="range"
+             min="1"
+             step="1"
+             max="10"
+             value="3"
+             class="w-full"
+             onchange="setSpeed(this.value)" />
+    </fieldset>
+  </div>
+  <div class="card hover:shadow-md transition-all w-fit float-right">
+    <button class="size-[56px] xl:size-10 shrink-0 grid place-content-center text-slate-500 rotate-0 transition-all"
+            id="open-fab">
+      <i data-lucide="plus"></i>
+    </button>
+  </div>
+</aside>
+
+<script>
+    const fab = document.getElementById("open-fab");
+    fab.addEventListener("click", () => {
+        const fab = document.getElementById("open-fab");
+        fab.classList.toggle("rotate-45");
+        fab.classList.toggle("rotate-0");
+    });
+</script>
+<script type="module">
+    import {
+        animate,
+        scroll
+    } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm"
+
+    // Animate FAB content open/close
+    const fab = document.getElementById("open-fab");
+    const fabContent = document.getElementById("fab-content");
+    let fabOpen = false;
+
+    fab.addEventListener("click", () => {
+        fabOpen = !fabOpen;
+        if (fabOpen) {
+            fabContent.style.pointerEvents = "auto";
+            animate(fabContent, {
+                height: "24rem", // h-96
+                width: "14rem", // w-56
+                opacity: 1
+            }, {
+                duration: 0.25,
+                easing: "ease-in-out"
+            });
+        } else {
+            animate(fabContent, {
+                height: "0rem",
+                width: "0rem",
+                opacity: 0
+            }, {
+                duration: 0.25,
+                easing: "ease-in-out"
+            }).finished.then(() => {
+                fabContent.style.pointerEvents = "none";
+            });
+        }
+    });
+
+    // Set initial state
+    fabContent.style.height = "0rem";
+    fabContent.style.width = "0rem";
+    fabContent.style.opacity = 0;
+    fabContent.style.pointerEvents = "none";
+</script>
+<script type="module">
+    import {
+        updateQueryParams
+    } from "./static/scripts/query-params.js";
+    import {
+        speed,
+        playback,
+        globalEffect,
+    } from "./static/modules/global-states.js";
+    import {
+        bindStateToElements
+    } from "./static/modules/bind-state.js";
+
+    // Bind state to elements
+    bindStateToElements("speed", speed);
+    bindStateToElements("playback", playback);
+
+    // On first load, get playback and speed from query params
+    const params = new URLSearchParams(window.location.search);
+    const playbackParam = params.get("playback");
+    const speedParam = params.get("speed");
+
+    if (playbackParam) updatePlaybackButton(playbackParam);
+    if (speedParam) updateSliderButton(speedParam);
+
+    // 🎛 UI Update Functions
+    function updatePlaybackButton(state) {
+        const buttons = {
+            play: document.getElementById("playback-play"),
+            pause: document.getElementById("playback-pause"),
+            stop: document.getElementById("playback-stop"),
+        };
+
+        if (!buttons.play || !buttons.pause || !buttons.stop) {
+            console.error("Playback buttons not found in DOM.");
+            return;
+        }
+
+        Object.values(buttons).forEach((btn) =>
+            btn.classList.remove("bg-slate-700")
+        );
+
+        if (buttons[state]) {
+            buttons[state].classList.add("bg-slate-700");
+        } else {
+            console.error(`Invalid playback state: ${state}`);
+        }
+    }
+
+    function updateSliderButton(value) {
+        const speedRange = document.getElementById("speed-range");
+        speedRange.value = value;
+    }
+
+    if (speedParam) {
+        setSpeed(speedParam);
+    }
+    /**
+     * Set the playback state to play
+     * @param {'play' | 'pause' | 'stop'} state
+     */
+    function setPlayback(state) {
+        playback.set(state);
+        updateQueryParams("playback", state);
+    }
+
+    /**
+     * Update the slider value in the query params
+     * @param {number} value
+     */
+    function setSpeed(value) {
+        speed.set(value);
+        updateQueryParams("speed", value);
+    }
+
+    globalEffect(() => {
+        console.log("Effect triggered: ", {
+            speed: speed.value,
+            playback: playback.value,
+        });
+    }, [speed, playback]);
+
+    globalEffect(() => {
+        updatePlaybackButton(playback.value);
+    }, [playback]);
+
+    // ✅ Attach function to window so it can be used globally
+    window.setSpeed = setSpeed;
+    window.setPlayback = setPlayback;
+</script>
+<script type="module">
+    import {
+        animate,
+        scroll
+    } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm"
+</script>
