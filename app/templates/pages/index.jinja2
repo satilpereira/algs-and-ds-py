@@ -2,7 +2,7 @@
 {% block title %}
   Home
 {% endblock title %}
-{% from "ui/card.html" import card_header, card_title, card_content, card_footer %}
+{% from "ui/card.jinja2" import card_header, card_title, card_content, card_footer %}
 {% block content %}
   <div class="card container h-full flex flex-col">
     {% call card_header() %}

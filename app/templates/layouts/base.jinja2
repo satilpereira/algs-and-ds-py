@@ -32,6 +32,12 @@
     <script type="module">
         import "{{ url_for('static', filename='../../static/modules/bind-state.js') }}";
     </script>
+    <script type="module">
+        import {
+            loadWasm
+        } from "{{ url_for('static', filename='../../static/wasm/index.js') }}";
+        loadWasm()
+    </script>
   </body>
 
 </html>

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "export FLASK_DEBUG=1 && flask run",
-    "styles": "npx tailwindcss -i ./app/static/src/globals.css -o ./app/static/dist/globals.css --watch"
+    "styles": "npx tailwindcss -i ./app/static/src/globals.css -o ./app/static/dist/globals.css --watch",
+    "wasm:build": "./build-wasm.sh"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
