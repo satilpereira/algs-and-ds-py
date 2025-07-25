@@ -32,6 +32,14 @@
              class="w-full"
              onchange="setSpeed(this.value)" />
     </fieldset>
+    <fieldset class="space-y-2 px-6 py-2">
+      <label for="target-input" class="font-bold">Target</label>
+      <input id="target-input"
+             type="number"
+             value="0"
+             class="w-full p-2 border rounded-lg"
+             oninput="setTarget(this.value)" />
+    </fieldset>
   </div>
   <div class="card hover:shadow-md transition-all w-fit float-right">
     <button class="size-[56px] xl:size-10 shrink-0 grid place-content-center text-slate-500 rotate-0 transition-all"
@@ -41,14 +49,6 @@
   </div>
 </aside>
 
-<script>
-    const fab = document.getElementById("open-fab");
-    fab.addEventListener("click", () => {
-        const fab = document.getElementById("open-fab");
-        fab.classList.toggle("rotate-45");
-        fab.classList.toggle("rotate-0");
-    });
-</script>
 <script type="module">
     import {
         animate,
@@ -99,6 +99,7 @@
     import {
         speed,
         playback,
+        target,
         globalEffect,
     } from "./static/modules/global-states.js";
     import {
@@ -113,9 +114,11 @@
     const params = new URLSearchParams(window.location.search);
     const playbackParam = params.get("playback");
     const speedParam = params.get("speed");
+    const targetParam = params.get("target");
 
     if (playbackParam) updatePlaybackButton(playbackParam);
     if (speedParam) updateSliderButton(speedParam);
+    if (targetParam) updateTargetInput(targetParam);
 
     // 🎛 UI Update Functions
     function updatePlaybackButton(state) {
@@ -146,6 +149,11 @@
         speedRange.value = value;
     }
 
+    function updateTargetInput(value) {
+        const targetInput = document.getElementById("target-input");
+        targetInput.value = value;
+    }
+
     if (speedParam) {
         setSpeed(speedParam);
     }
@@ -167,12 +175,22 @@
         updateQueryParams("speed", value);
     }
 
+    /**
+     * Set the target value in the query params
+     * @param {number} value
+     */
+    function setTarget(value) {
+        target.set(value);
+        updateQueryParams("target", value);
+    }
+
     globalEffect(() => {
         console.log("Effect triggered: ", {
             speed: speed.value,
             playback: playback.value,
+            target: target.value,
         });
-    }, [speed, playback]);
+    }, [speed, playback, target]);
 
     globalEffect(() => {
         updatePlaybackButton(playback.value);
@@ -181,6 +199,7 @@
     // ✅ Attach function to window so it can be used globally
     window.setSpeed = setSpeed;
     window.setPlayback = setPlayback;
+    window.setTarget = setTarget;
 </script>
 <script type="module">
     import {

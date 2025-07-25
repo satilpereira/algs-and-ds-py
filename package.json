@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "export FLASK_DEBUG=1 && flask run",
+    "dev": "concurrently \"npm run flask\" \"npm run styles\"",
+    "flask": "export FLASK_DEBUG=1 && flask run",
     "styles": "npx tailwindcss -i ./app/static/src/globals.css -o ./app/static/dist/globals.css --watch",
     "wasm:build": "./build-wasm.sh"
   },
